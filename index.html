@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ballot Paper Register</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#0b4fc4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ballots">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Zilla+Slab:wght@600;700&display=swap">
+<style>
+/* Layout: one column "paper form" sheet; numbered lines 1-4 stack, line 5 total band in blue at the foot. */
+:root {
+  --paper: #fbfbf8;
+  --ground: #e9ecf1;
+  --ink: #1b1f27;
+  --muted: #4a5262;
+  --rule: #c9ced8;
+  --blue: #0b4fc4;
+  --blue-soft: #e6eefc;
+  --warn: #8a4b00;
+  --warn-soft: #fff3df;
+  --focus: #f2b300;
+  --font-body: "Atkinson Hyperlegible", "Verdana", "Segoe UI", system-ui, sans-serif;
+  --font-head: "Zilla Slab", "Rockwell", Georgia, serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1a1e26; --ground: #10131a; --ink: #f1f3f7; --muted: #b9c0cd; --rule: #3a4252;
+  --blue: #7fb0ff; --blue-soft: #16233d; --warn: #ffc56b; --warn-soft: #33270f; --focus: #ffd34d;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #1a1e26; --ground: #10131a; --ink: #f1f3f7; --muted: #b9c0cd; --rule: #3a4252;
+  --blue: #7fb0ff; --blue-soft: #16233d; --warn: #ffc56b; --warn-soft: #33270f; --focus: #ffd34d;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.sheet {
+  max-width: 44rem;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: clamp(20px, 4vw, 40px);
+  display: grid;
+  gap: 28px;
+}
+header { display: grid; gap: 6px; border-bottom: 3px double var(--rule); padding-bottom: 18px; }
+.eyebrow { font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0; }
+h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.4rem); line-height: 1.15; margin: 0; text-wrap: balance; }
+.intro { margin: 0; color: var(--muted); max-width: 36rem; }
+
+form { display: grid; gap: 22px; margin: 0; }
+.line {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 4px 16px;
+  align-items: start;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+}
+.num {
+  grid-row: span 3;
+  width: 3rem; height: 3rem;
+  border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 1.4rem;
+  margin-top: 2px;
+}
+.line label { font-weight: 700; font-size: 1.35rem; line-height: 1.3; }
+.help { color: var(--muted); font-size: 1.1rem; margin: 0; }
+.help ul { margin: 4px 0 0; padding-left: 1.2em; }
+.field { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.plus { font-size: 1.6rem; font-weight: 700; color: var(--muted); width: 1.2rem; text-align: center; }
+input[type="text"] {
+  font: inherit;
+  font-size: 1.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+  max-width: 14rem;
+  min-height: 64px;
+  padding: 8px 16px;
+  text-align: right;
+  color: var(--ink);
+  background: var(--paper);
+  border: 3px solid var(--muted);
+  border-radius: 8px;
+}
+input[type="text"]:focus { outline: 4px solid var(--focus); outline-offset: 2px; border-color: var(--ink); }
+input[aria-invalid="true"] { border-color: var(--warn); }
+.msg {
+  grid-column: 2;
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.total {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 4px 16px;
+  align-items: center;
+  background: var(--blue-soft);
+  border: 3px solid var(--blue);
+  border-radius: 10px;
+  padding: 20px;
+}
+.total .num { background: var(--blue); color: var(--paper); grid-row: span 2; }
+.total-label { font-weight: 700; font-size: 1.35rem; color: var(--blue); line-height: 1.3; }
+.total-value {
+  grid-column: 2;
+  font-size: clamp(2.8rem, 10vw, 4rem);
+  font-weight: 700;
+  color: var(--blue);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.total-note { grid-column: 1 / -1; margin: 6px 0 0; font-size: 1.1rem; color: var(--ink); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+button {
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  min-height: 60px;
+  padding: 10px 26px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+}
+button:hover { background: var(--ground); }
+button:focus-visible { outline: 4px solid var(--focus); outline-offset: 2px; }
+.status { font-size: 1.1rem; color: var(--muted); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.status button { min-height: 48px; padding: 6px 18px; font-size: 1.1rem; }
+
+.footnote { margin: 0; font-size: 1.05rem; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; }
+
+@media (max-width: 420px) {
+  body { font-size: 1.15rem; }
+  .line, .total { grid-template-columns: 2.4rem 1fr; gap: 4px 12px; }
+  .num { width: 2.4rem; height: 2.4rem; font-size: 1.15rem; }
+  .msg { grid-column: 1 / -1; }
+  .total { padding: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .total-value.bump { animation: bump 0.25s ease-out; }
+  @keyframes bump { from { transform: scale(1.04); } to { transform: none; } }
+}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header>
+    <p class="eyebrow">Early voting at branch location</p>
+    <h1>Register of Official Ballots</h1>
+    <p class="intro">Type a whole number in boxes 1 to 4. The total in box 5 adds itself up as you type.</p>
+  </header>
+
+  <form id="ballot-form" novalidate autocomplete="off">
+    <div class="line">
+      <span class="num" aria-hidden="true">1</span>
+      <label for="in-person">Number of ballots voted in person</label>
+      <p class="help" id="in-person-help">The number of voters on the ePollBook.</p>
+      <div class="field"><span class="plus" aria-hidden="true"></span>
+        <input type="text" id="in-person" inputmode="numeric" pattern="[0-9]*" aria-describedby="in-person-help in-person-msg" placeholder="0">
+      </div>
+      <p class="msg" id="in-person-msg" role="status" hidden></p>
+    </div>
+
+    <div class="line">
+      <span class="num" aria-hidden="true">2</span>
+      <label for="spoiled">Number of spoiled ballots (voided)</label>
+      <div class="help" id="spoiled-help">Includes:
+        <ul>
+          <li>Voter returned ballot to remake choices</li>
+          <li>Ballot paper damaged in some way</li>
+          <li>Extra signed or stamped ballot paper at end of election</li>
+        </ul>
+      </div>
+      <div class="field"><span class="plus" aria-hidden="true">+</span>
+        <input type="text" id="spoiled" inputmode="numeric" pattern="[0-9]*" aria-describedby="spoiled-help spoiled-msg" placeholder="0">
+      </div>
+      <p class="msg" id="spoiled-msg" role="status" hidden></p>
+    </div>
+
+    <div class="line">
+      <span class="num" aria-hidden="true">3</span>
+      <label for="provisional">Number of provisional ballots voted</label>
+      <p class="help" id="provisional-help">The number of voters on the <em>List of Provisional Voters</em>.</p>
+      <div class="field"><span class="plus" aria-hidden="true">+</span>
+        <input type="text" id="provisional" inputmode="numeric" pattern="[0-9]*" aria-describedby="provisional-help provisional-msg" placeholder="0">
+      </div>
+      <p class="msg" id="provisional-msg" role="status" hidden></p>
+    </div>
+
+    <div class="line">
+      <span class="num" aria-hidden="true">4</span>
+      <label for="unused">Number of unused ballot paper</label>
+      <p class="help" id="unused-help">Unsigned and unstamped.</p>
+      <div class="field"><span class="plus" aria-hidden="true">+</span>
+        <input type="text" id="unused" inputmode="numeric" pattern="[0-9]*" aria-describedby="unused-help unused-msg" placeholder="0">
+      </div>
+      <p class="msg" id="unused-msg" role="status" hidden></p>
+    </div>
+  </form>
+
+  <section class="total" aria-labelledby="total-label">
+    <span class="num" aria-hidden="true">5</span>
+    <span class="total-label" id="total-label">Equals total number of ballot paper</span>
+    <output class="total-value" id="total" for="in-person spoiled provisional unused" aria-live="polite">0</output>
+    <p class="total-note">This number should equal the total number of ballot paper received at the Vote Center.</p>
+  </section>
+
+  <div class="actions">
+    <button type="button" id="clear">Clear all boxes</button>
+    <div class="status" id="undo-row" hidden>
+      <span>Boxes cleared.</span>
+      <button type="button" id="undo">Undo</button>
+    </div>
+  </div>
+
+  <p class="footnote"><strong>Note:</strong> printed damaged ballots are included in the ePollBook number. They do not have their own line above.</p>
+</main>
+
+<script>
+(function () {
+  var ids = ["in-person", "spoiled", "provisional", "unused"];
+  var inputs = ids.map(function (id) { return document.getElementById(id); });
+  var totalEl = document.getElementById("total");
+  var undoRow = document.getElementById("undo-row");
+  var saved = null;
+  var MAX_DIGITS = 9;
+
+  function showMsg(input, text) {
+    var msg = document.getElementById(input.id + "-msg");
+    if (text) {
+      msg.textContent = text;
+      msg.hidden = false;
+      input.setAttribute("aria-invalid", "true");
+      clearTimeout(input._t);
+      input._t = setTimeout(function () { showMsg(input, ""); }, 4000);
+    } else {
+      msg.hidden = true;
+      input.removeAttribute("aria-invalid");
+    }
+  }
+
+  // Keep only digits. Commas and spaces are dropped quietly; any other character
+  // is refused and the box goes back to its last good number, with a gentle note.
+  function clean(input) {
+    var raw = input.value;
+    var digits = raw.replace(/[,\s]/g, "");
+    if (/\D/.test(digits)) {
+      if (/\./.test(raw)) showMsg(input, "Whole numbers only, please. Decimals are not allowed.");
+      else if (/-/.test(raw)) showMsg(input, "Numbers can't be below zero.");
+      else showMsg(input, "Please type numbers only (0 to 9).");
+      digits = input._last || "";
+    } else if (digits.length > MAX_DIGITS) {
+      showMsg(input, "That number is too long.");
+      digits = input._last || "";
+    }
+    if (digits.length > 1) digits = digits.replace(/^0+(?=\d)/, "");
+    if (input.value !== digits) {
+      var pos = Math.max(0, (input.selectionStart || 0) - (input.value.length - digits.length));
+      input.value = digits;
+      try { input.setSelectionRange(pos, pos); } catch (e) {}
+    }
+    input._last = digits;
+  }
+
+  function update() {
+    var sum = inputs.reduce(function (acc, el) { return acc + (parseInt(el.value, 10) || 0); }, 0);
+    var text = sum.toLocaleString("en-US");
+    if (totalEl.textContent !== text) {
+      totalEl.textContent = text;
+      totalEl.classList.remove("bump"); void totalEl.offsetWidth; totalEl.classList.add("bump");
+    }
+  }
+
+  inputs.forEach(function (input, i) {
+    input.addEventListener("input", function () { clean(input); update(); undoRow.hidden = true; });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (inputs[i + 1]) inputs[i + 1].focus(); else input.blur();
+      }
+    });
+  });
+
+  document.getElementById("ballot-form").addEventListener("submit", function (e) { e.preventDefault(); });
+
+  document.getElementById("clear").addEventListener("click", function () {
+    saved = inputs.map(function (el) { return el.value; });
+    inputs.forEach(function (el) { el.value = el._last = ""; showMsg(el, ""); });
+    update();
+    undoRow.hidden = false;
+    inputs[0].focus();
+  });
+
+  document.getElementById("undo").addEventListener("click", function () {
+    if (saved) inputs.forEach(function (el, i) { el.value = el._last = saved[i]; });
+    saved = null;
+    undoRow.hidden = true;
+    update();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
