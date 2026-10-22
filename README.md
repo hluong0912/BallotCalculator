@@ -21,7 +21,7 @@ Open `index.html` in any web browser. There is nothing to install. It also works
 - Big boxes and buttons that are easy to tap
 - Phones and tablets show the number keypad
 - Only whole numbers are accepted; decimals, minus signs and letters are refused with a friendly note
-- Press Enter to move to the next box
+- A big **Next** button beside each box (or the keyboard's Enter/Next key) moves to the next box; after box 4 it jumps to the total
 - "Clear all boxes" with an Undo button in case it was tapped by mistake
 
 ## Put it on an iPhone or iPad home screen
